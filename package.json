@@ -1,0 +1,33 @@
+{
+  "name": "near-staking-app",
+  "version": "1.0.0",
+  "description": "Simple frontend for staking on frutero.pool.near",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "near-api-js": "^4.0.3",
+    "@near-js/transactions": "^1.2.2",
+    "@near-js/signers": "^0.1.2",
+    "@near-js/providers": "^1.0.0",
+    "@near-wallet-selector/core": "^8.9.13",
+    "@near-wallet-selector/modal-ui": "^8.9.13",
+    "@near-wallet-selector/my-near-wallet": "^8.9.13",
+    "@near-wallet-selector/meteor-wallet": "^8.9.13",
+    "@near-wallet-selector/here-wallet": "^8.9.13"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "vite-plugin-node-polyfills": "^0.22.0",
+    "buffer": "^6.0.3",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5"
+  },
+  "keywords": ["near", "staking", "blockchain"],
+  "author": "",
+  "license": "MIT"
+}

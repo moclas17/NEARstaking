@@ -1,0 +1,619 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding-top: 80px;
+    color: #333;
+}
+
+/* Patrón de fondo sutil */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(52, 211, 153, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Header fijo superior */
+.top-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 0 20px;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.header-logo h1 {
+    font-size: 1.5em;
+    background: linear-gradient(135deg, #ff6b35 0%, #34d399 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    margin: 0;
+}
+
+.header-wallet {
+    display: flex;
+    align-items: center;
+}
+
+.wallet-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.wallet-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(52, 211, 153, 0.1) 100%);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.wallet-label {
+    color: #6c757d;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.wallet-info strong {
+    color: #ff6b35;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.btn-icon {
+    background: rgba(220, 53, 69, 0.1);
+    border: none;
+    border-radius: 6px;
+    padding: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: #dc3545;
+}
+
+.btn-icon:hover {
+    background: rgba(220, 53, 69, 0.2);
+    transform: scale(1.1);
+}
+
+.btn-icon svg {
+    display: block;
+}
+
+.btn-small {
+    padding: 8px 18px;
+    font-size: 13px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+}
+
+/* Banner */
+.banner-container {
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.banner-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 250px;
+    object-fit: cover;
+}
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.pool-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+}
+
+.pool-logo:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+.hero-title {
+    font-size: 2em;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Cards */
+.card {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+    margin-bottom: 25px;
+    color: #ff6b35;
+    border-bottom: 3px solid #34d399;
+    padding-bottom: 12px;
+    font-size: 1.6em;
+    font-weight: 700;
+}
+
+.card h3 {
+    margin-bottom: 15px;
+    color: #16213e;
+    font-weight: 600;
+    font-size: 1.3em;
+}
+
+/* Botones */
+.btn {
+    padding: 13px 28px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #ff5722 0%, #ff7b29 100%);
+}
+
+/* Efecto de brillo en botón primario */
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+    color: #1a1a2e;
+    margin-right: 10px;
+    font-weight: 700;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #ffb300 0%, #ffa000 100%);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    color: white;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Información de cuenta */
+.info-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.08) 0%, rgba(255, 107, 53, 0.08) 100%);
+    border-radius: 12px;
+    align-items: center;
+    border-left: 4px solid #34d399;
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    transform: translateX(8px);
+    border-left-color: #ff6b35;
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.12) 0%, rgba(255, 107, 53, 0.12) 100%);
+}
+
+.info-item .label {
+    font-weight: 600;
+    color: #16213e;
+    font-size: 1em;
+}
+
+.info-item .value {
+    font-size: 1.4em;
+    font-weight: 800;
+    color: #ff6b35;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #16213e;
+    font-size: 1em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.help-text {
+    margin-top: 8px;
+    font-size: 0.88em;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Mensajes */
+.message {
+    padding: 15px 22px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-align: center;
+    border-left: 4px solid;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-left-color: #17a2b8;
+}
+
+.message-success {
+    background: #d4edda;
+    color: #155724;
+    border-left-color: #34d399;
+}
+
+.message-error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left-color: #dc3545;
+}
+
+/* Información del pool */
+.info-card {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 2px solid rgba(255, 107, 53, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.info-card h2 {
+    color: #ff6b35;
+    border-bottom-color: #34d399;
+    margin-bottom: 20px;
+}
+
+.info-content {
+    margin-top: 10px;
+}
+
+.info-description {
+    color: #16213e;
+    font-size: 1.05em;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.info-benefits {
+    display: grid;
+    gap: 18px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 18px;
+    background: white;
+    border-radius: 12px;
+    border-left: 4px solid #34d399;
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+    transform: translateX(8px);
+    border-left-color: #ff6b35;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-icon {
+    font-size: 2em;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.benefit-text {
+    flex: 1;
+}
+
+.benefit-text strong {
+    display: block;
+    color: #16213e;
+    font-size: 1.05em;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.benefit-text p {
+    color: #6c757d;
+    font-size: 0.95em;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 50px;
+    padding: 25px;
+    opacity: 0.9;
+    font-size: 0.95em;
+}
+
+footer p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+}
+
+footer #network-name {
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #34d399;
+    background: rgba(52, 211, 153, 0.2);
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+
+.footer-credit {
+    font-size: 0.9em;
+    margin-top: 12px;
+}
+
+.footer-credit strong {
+    color: #ff6b35;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding-top: 65px;
+    }
+
+    .header-content {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    .header-logo h1 {
+        font-size: 1.1em;
+        white-space: nowrap;
+    }
+
+    .wallet-status {
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    .wallet-info {
+        padding: 8px 12px;
+        gap: 6px;
+    }
+
+    .wallet-label {
+        display: none;
+    }
+
+    .wallet-info strong {
+        font-size: 0.85em;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .btn {
+        padding: 10px 16px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .btn-icon {
+        padding: 5px;
+    }
+
+    .btn-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hero-title {
+        font-size: 1.5em;
+    }
+
+    .pool-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .card {
+        padding: 22px;
+    }
+
+    .card h2 {
+        font-size: 1.4em;
+    }
+
+    .info-item {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+        padding: 18px;
+    }
+
+    .info-item:hover {
+        transform: translateX(0);
+        transform: translateY(-3px);
+    }
+
+    .btn-warning {
+        margin-right: 0;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .btn-success {
+        width: 100%;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-out;
+}
