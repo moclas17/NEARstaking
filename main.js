@@ -6,10 +6,11 @@ import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import "@near-wallet-selector/modal-ui/styles.css";
 import { providers, utils } from "near-api-js";
 
-// Configuración
-const POOL_ID = 'frutero.pool.near';
-const NETWORK = 'mainnet'; // Cambia a 'testnet' para pruebas
-const MIN_STAKE_AMOUNT = '1'; // NEAR
+// Configuración desde variables de entorno
+const POOL_ID = import.meta.env.VITE_POOL_ID || 'frutero.pool.near';
+const NETWORK = import.meta.env.VITE_NETWORK || 'mainnet';
+const RPC_URL = import.meta.env.VITE_RPC_URL || 'https://rpc.mainnet.near.org';
+const MIN_STAKE_AMOUNT = import.meta.env.VITE_MIN_STAKE_AMOUNT || '1';
 
 // Estado global
 let selector;
@@ -22,9 +23,7 @@ async function init() {
     try {
         // Configurar el provider de NEAR
         provider = new providers.JsonRpcProvider({
-            url: NETWORK === 'mainnet'
-                ? 'https://rpc.mainnet.near.org'
-                : 'https://rpc.testnet.near.org'
+            url: RPC_URL
         });
 
         // Inicializar NEAR Wallet Selector
@@ -67,6 +66,9 @@ async function init() {
         });
 
         showMessage('Aplicación iniciada correctamente', 'success');
+
+        // Cargar estadísticas del pool
+        await loadPoolStatistics();
     } catch (error) {
         console.error('Error al inicializar:', error);
         showMessage('Error al inicializar la aplicación: ' + error.message, 'error');
@@ -227,6 +229,123 @@ async function getRewards() {
     } catch (error) {
         console.error('Error al obtener recompensas:', error);
         return '0';
+    }
+}
+
+// Obtener estadísticas del pool
+async function getPoolStats() {
+    try {
+        // Total staked en el pool
+        const totalStakedResult = await provider.query({
+            request_type: 'call_function',
+            finality: 'optimistic',
+            account_id: POOL_ID,
+            method_name: 'get_total_staked_balance',
+            args_base64: btoa(JSON.stringify({}))
+        });
+
+        const totalStaked = JSON.parse(new TextDecoder().decode(new Uint8Array(totalStakedResult.result)));
+
+        // Número de delegadores
+        const numAccountsResult = await provider.query({
+            request_type: 'call_function',
+            finality: 'optimistic',
+            account_id: POOL_ID,
+            method_name: 'get_number_of_accounts',
+            args_base64: btoa(JSON.stringify({}))
+        });
+
+        const numAccounts = JSON.parse(new TextDecoder().decode(new Uint8Array(numAccountsResult.result)));
+
+        // El valor viene como string en yoctoNEAR
+        const formattedStaked = utils.format.formatNearAmount(totalStaked.toString());
+
+        return {
+            totalStaked: formattedStaked,
+            numDelegators: numAccounts
+        };
+    } catch (error) {
+        console.error('Error al obtener estadísticas del pool:', error);
+        return {
+            totalStaked: '0',
+            numDelegators: 0
+        };
+    }
+}
+
+// Obtener lista de delegadores (top delegadores)
+async function getTopDelegators() {
+    try {
+        // Intentar obtener las cuentas del pool
+        const accountsResult = await provider.query({
+            request_type: 'call_function',
+            finality: 'optimistic',
+            account_id: POOL_ID,
+            method_name: 'get_accounts',
+            args_base64: btoa(JSON.stringify({ from_index: 0, limit: 20 }))
+        });
+
+        const accounts = JSON.parse(new TextDecoder().decode(new Uint8Array(accountsResult.result)));
+
+        // Convertir y ordenar por staked balance
+        const delegators = accounts.map(acc => {
+            const formattedAmount = utils.format.formatNearAmount(acc.staked_balance.toString());
+            const numericAmount = parseFloat(formattedAmount.replace(/,/g, ''));
+            return {
+                accountId: acc.account_id,
+                stakedBalance: numericAmount
+            };
+        }).sort((a, b) => b.stakedBalance - a.stakedBalance);
+
+        return delegators;
+    } catch (error) {
+        console.error('Error al obtener delegadores:', error);
+        // Si el método no existe, retornar array vacío
+        return [];
+    }
+}
+
+// Cargar y mostrar estadísticas del pool
+async function loadPoolStatistics() {
+    try {
+        // Obtener estadísticas generales
+        const stats = await getPoolStats();
+
+        // Actualizar UI con estadísticas (con formato de separadores de miles)
+        // Asegurar que parseamos correctamente el número con coma
+        const totalNumber = parseFloat(stats.totalStaked.replace(/,/g, ''));
+        const formattedTotal = totalNumber.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        document.getElementById('pool-total-staked').textContent = formattedTotal + ' NEAR';
+        document.getElementById('pool-num-delegators').textContent = stats.numDelegators;
+
+        // Obtener top delegadores
+        const delegators = await getTopDelegators();
+
+        // Mostrar delegadores si existen
+        const delegatorsList = document.getElementById('delegators-list');
+        if (delegators.length > 0) {
+            delegatorsList.innerHTML = delegators.slice(0, 10).map((delegator, index) => {
+                // Formatear el balance con separadores de miles
+                const formattedBalance = delegator.stakedBalance.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return `
+                    <div class="delegator-item">
+                        <span class="delegator-rank">#${index + 1}</span>
+                        <span class="delegator-account">${delegator.accountId}</span>
+                        <span class="delegator-amount">${formattedBalance} NEAR</span>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            delegatorsList.innerHTML = '<p class="no-data">No se pudieron cargar los delegadores</p>';
+        }
+    } catch (error) {
+        console.error('Error al cargar estadísticas del pool:', error);
     }
 }
 

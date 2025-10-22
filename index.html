@@ -89,6 +89,26 @@
             <!-- Mensajes -->
             <div id="message" class="message" style="display: none;"></div>
 
+            <!-- Estadísticas del Pool -->
+            <div class="card stats-card">
+                <h2>📊 Estadísticas del Pool</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Delegado:</span>
+                        <span id="pool-total-staked" class="stat-value">Cargando...</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Número de Delegadores:</span>
+                        <span id="pool-num-delegators" class="stat-value">Cargando...</span>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px; color: #16213e;">Top 10 Delegadores</h3>
+                <div id="delegators-list" class="delegators-list">
+                    <p class="loading-text">Cargando delegadores...</p>
+                </div>
+            </div>
+
             <!-- Información del pool -->
             <div class="card info-card">
                 <h2 id="pool-info-title">📊 Sobre frutero.pool.near</h2>

@@ -19,10 +19,35 @@ Aplicación web simple para hacer staking en el nodo validador **frutero.pool.ne
 
 ## Instalación
 
-1. Instala las dependencias:
+1. Clona el repositorio:
+
+```bash
+git clone https://github.com/moclas17/NEARstaking.git
+cd NEARstaking
+```
+
+2. Instala las dependencias:
 
 ```bash
 npm install
+```
+
+3. Copia el archivo de configuración de ejemplo:
+
+```bash
+cp .env.example .env
+```
+
+4. (Opcional) Edita el archivo `.env` para personalizar la configuración:
+
+```env
+# NEAR Network Configuration
+VITE_NETWORK=mainnet
+VITE_RPC_URL=https://rpc.mainnet.near.org
+
+# Pool Configuration
+VITE_POOL_ID=frutero.pool.near
+VITE_MIN_STAKE_AMOUNT=1
 ```
 
 ## Uso
@@ -47,22 +72,39 @@ npm run dev
 
 ## Configuración
 
+Todas las configuraciones se manejan a través del archivo `.env`:
+
+### Variables de Entorno
+
+- **VITE_NETWORK**: Red de NEAR (`mainnet` o `testnet`)
+- **VITE_RPC_URL**: URL del nodo RPC de NEAR
+- **VITE_POOL_ID**: ID del pool de staking (ej: `frutero.pool.near`)
+- **VITE_MIN_STAKE_AMOUNT**: Cantidad mínima para hacer staking
+
 ### Cambiar de Mainnet a Testnet
 
-Si quieres probar en testnet primero, edita el archivo `main.js`:
+Edita el archivo `.env`:
 
-```javascript
-const NETWORK = 'testnet'; // Cambiar de 'mainnet' a 'testnet'
+```env
+VITE_NETWORK=testnet
+VITE_RPC_URL=https://rpc.testnet.near.org
+VITE_POOL_ID=pool.pool.f863973.m0
 ```
-
-Para testnet, usa el pool de prueba: `pool.pool.f863973.m0` o cualquier otro pool de testnet.
 
 ### Cambiar el Pool
 
-Para usar un pool diferente, edita la constante en `main.js`:
+Edita el archivo `.env`:
 
-```javascript
-const POOL_ID = 'tu-pool.pool.near';
+```env
+VITE_POOL_ID=tu-pool.pool.near
+```
+
+### Usar un RPC Personalizado
+
+Puedes usar cualquier proveedor RPC (como dRPC, Infura, etc.):
+
+```env
+VITE_RPC_URL=https://tu-rpc-provider.com/near
 ```
 
 ## Cómo Funciona el Staking
@@ -92,7 +134,11 @@ nearstaking/
 ├── index.html          # Estructura HTML de la aplicación
 ├── main.js             # Lógica de la aplicación y conexión NEAR
 ├── style.css           # Estilos de la aplicación
+├── vite.config.js      # Configuración de Vite
 ├── package.json        # Dependencias y scripts
+├── .env                # Variables de configuración (no versionado)
+├── .env.example        # Template de configuración
+├── .gitignore          # Archivos ignorados por git
 └── README.md           # Este archivo
 ```
 
