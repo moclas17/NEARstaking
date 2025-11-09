@@ -49,16 +49,44 @@
                 <h2>Información de Cuenta</h2>
                 <div class="info-grid">
                     <div class="info-item">
-                        <span class="label">Balance Disponible:</span>
+                        <span class="label">Balance Disponible en Wallet:</span>
                         <span id="available-balance" class="value">0 NEAR</span>
                     </div>
-                    <div class="info-item">
-                        <span class="label" id="staked-label">Staked en frutero.pool.near:</span>
-                        <span id="staked-balance" class="value">0 NEAR</span>
+                </div>
+
+                <div class="section-header">
+                    <h3 class="section-title">📈 Staking en frutero.pool.near</h3>
+                    <button id="reset-rewards-btn" class="btn-reset" title="Resetear el cálculo de recompensas usando el balance actual como base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        Resetear Base
+                    </button>
+                </div>
+                <div class="staking-summary">
+                    <div class="staking-breakdown">
+                        <div class="staking-item capital-item">
+                            <div class="staking-label">
+                                <span class="label-icon">💰</span>
+                                <span class="label-text">Capital en Staking</span>
+                            </div>
+                            <span id="staked-balance" class="staking-value capital-value">0 NEAR</span>
+                        </div>
+                        <div class="staking-item rewards-item">
+                            <div class="staking-label">
+                                <span class="label-icon">✨</span>
+                                <span class="label-text">Recompensas Acumuladas</span>
+                            </div>
+                            <span id="rewards" class="staking-value rewards-value">0 NEAR</span>
+                        </div>
                     </div>
-                    <div class="info-item">
-                        <span class="label">Recompensas:</span>
-                        <span id="rewards" class="value">0 NEAR</span>
+                    <div class="staking-total">
+                        <div class="total-label">
+                            <span class="label-icon">🎯</span>
+                            <span class="label-text">Total en el Pool</span>
+                        </div>
+                        <span id="total-balance" class="total-value">0 NEAR</span>
                     </div>
                 </div>
             </div>

@@ -85,6 +85,29 @@ function setupEventListeners() {
     document.getElementById('stake-btn').addEventListener('click', stakeTokens);
     document.getElementById('unstake-btn').addEventListener('click', unstakeTokens);
     document.getElementById('withdraw-btn').addEventListener('click', withdrawTokens);
+
+    // Botón de resetear cálculo de recompensas
+    document.getElementById('reset-rewards-btn').addEventListener('click', resetRewardsCalculation);
+}
+
+// Resetear el cálculo de recompensas
+async function resetRewardsCalculation() {
+    if (!accountId) {
+        showMessage('Debes conectar tu wallet primero', 'error');
+        return;
+    }
+
+    if (confirm('¿Estás seguro de que quieres resetear el cálculo de recompensas?\n\nEsto establecerá tu balance actual en staking como el nuevo depósito inicial y las recompensas se mostrarán a partir de este punto.')) {
+        try {
+            const currentStakedBalance = parseFloat(await getStakedBalance());
+            saveInitialDeposit(accountId, currentStakedBalance);
+            await loadAccountInfo();
+            showMessage('Cálculo de recompensas reseteado exitosamente', 'success');
+        } catch (error) {
+            console.error('Error al resetear recompensas:', error);
+            showMessage('Error al resetear el cálculo: ' + error.message, 'error');
+        }
+    }
 }
 
 // Conectar wallet
@@ -139,6 +162,19 @@ function updateUIAfterDisconnection() {
     document.getElementById('unstaking-form').style.display = 'none';
 }
 
+// Obtener o inicializar el depósito inicial guardado
+function getInitialDeposit(accountId) {
+    const key = `initial_deposit_${accountId}_${POOL_ID}`;
+    const stored = localStorage.getItem(key);
+    return stored ? parseFloat(stored) : null;
+}
+
+// Guardar el depósito inicial
+function saveInitialDeposit(accountId, amount) {
+    const key = `initial_deposit_${accountId}_${POOL_ID}`;
+    localStorage.setItem(key, amount.toString());
+}
+
 // Cargar información de la cuenta
 async function loadAccountInfo() {
     try {
@@ -162,19 +198,38 @@ async function loadAccountInfo() {
             document.getElementById('available-balance').textContent = '-- NEAR';
         }
 
-        // Obtener balance en staking
-        const stakedBalance = await getStakedBalance();
-        document.getElementById('staked-balance').textContent = stakedBalance + ' NEAR';
+        // Obtener balance actual en staking (incluye capital + recompensas auto-compounded)
+        const currentStakedBalance = parseFloat(await getStakedBalance());
 
-        // Calcular recompensas
-        const rewards = await getRewards();
-        document.getElementById('rewards').textContent = rewards + ' NEAR';
+        // Verificar si tenemos el depósito inicial guardado
+        let initialDeposit = getInitialDeposit(accountId);
+
+        // Si no tenemos depósito inicial guardado, usar el balance actual como base
+        if (initialDeposit === null || initialDeposit === 0) {
+            initialDeposit = currentStakedBalance;
+            saveInitialDeposit(accountId, initialDeposit);
+            console.log('Depósito inicial guardado:', initialDeposit, 'NEAR');
+        }
+
+        // Calcular recompensas acumuladas
+        const rewards = Math.max(0, currentStakedBalance - initialDeposit);
+
+        // Mostrar valores
+        document.getElementById('staked-balance').textContent = initialDeposit.toFixed(2) + ' NEAR';
+        document.getElementById('rewards').textContent = rewards.toFixed(4) + ' NEAR';
+        document.getElementById('total-balance').textContent = currentStakedBalance.toFixed(2) + ' NEAR';
+
+        console.log('Balance breakdown:');
+        console.log('  Initial deposit:', initialDeposit.toFixed(2), 'NEAR');
+        console.log('  Current staked:', currentStakedBalance.toFixed(2), 'NEAR');
+        console.log('  Rewards earned:', rewards.toFixed(4), 'NEAR');
 
     } catch (error) {
         console.error('Error al cargar información:', error);
         // Mostrar valores por defecto si hay error
         document.getElementById('staked-balance').textContent = '0 NEAR';
         document.getElementById('rewards').textContent = '0 NEAR';
+        document.getElementById('total-balance').textContent = '0 NEAR';
     }
 }
 
@@ -200,37 +255,6 @@ async function getStakedBalance() {
     }
 }
 
-// Obtener recompensas
-async function getRewards() {
-    try {
-        if (!accountId) return '0';
-
-        const totalBalanceResult = await provider.query({
-            request_type: 'call_function',
-            finality: 'optimistic',
-            account_id: POOL_ID,
-            method_name: 'get_account_total_balance',
-            args_base64: btoa(JSON.stringify({ account_id: accountId }))
-        });
-
-        const stakedBalanceResult = await provider.query({
-            request_type: 'call_function',
-            finality: 'optimistic',
-            account_id: POOL_ID,
-            method_name: 'get_account_staked_balance',
-            args_base64: btoa(JSON.stringify({ account_id: accountId }))
-        });
-
-        const totalBalance = JSON.parse(new TextDecoder().decode(new Uint8Array(totalBalanceResult.result)));
-        const stakedBalance = JSON.parse(new TextDecoder().decode(new Uint8Array(stakedBalanceResult.result)));
-
-        const rewards = BigInt(totalBalance) - BigInt(stakedBalance);
-        return parseFloat(utils.format.formatNearAmount(rewards.toString())).toFixed(2);
-    } catch (error) {
-        console.error('Error al obtener recompensas:', error);
-        return '0';
-    }
-}
 
 // Obtener estadísticas del pool
 async function getPoolStats() {
@@ -387,6 +411,13 @@ async function stakeTokens() {
         if (result) {
             showMessage('Staking realizado exitosamente!', 'success');
             document.getElementById('stake-amount').value = '';
+
+            // Actualizar el depósito inicial sumando el nuevo stake
+            const currentInitialDeposit = getInitialDeposit(accountId) || 0;
+            const newInitialDeposit = currentInitialDeposit + parseFloat(amount);
+            saveInitialDeposit(accountId, newInitialDeposit);
+            console.log('Depósito inicial actualizado:', newInitialDeposit, 'NEAR');
+
             await loadAccountInfo();
         }
     } catch (error) {
@@ -440,6 +471,14 @@ async function unstakeTokens() {
         if (result) {
             showMessage('Unstake iniciado. Los fondos estarán disponibles en 2-3 epochs (~52-78 horas)', 'success');
             document.getElementById('unstake-amount').value = '';
+
+            // Actualizar el depósito inicial restando el unstake
+            const currentInitialDeposit = getInitialDeposit(accountId) || 0;
+            const unstakeAmount = parseFloat(amount);
+            const newInitialDeposit = Math.max(0, currentInitialDeposit - unstakeAmount);
+            saveInitialDeposit(accountId, newInitialDeposit);
+            console.log('Depósito inicial ajustado después de unstake:', newInitialDeposit, 'NEAR');
+
             await loadAccountInfo();
         }
     } catch (error) {

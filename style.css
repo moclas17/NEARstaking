@@ -325,6 +325,154 @@ body::before {
     color: #ff6b35;
 }
 
+/* Sección de staking mejorada */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(52, 211, 153, 0.3);
+}
+
+.section-title {
+    color: #16213e;
+    font-size: 1.3em;
+    font-weight: 700;
+    margin: 0;
+}
+
+.btn-reset {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 8px;
+    color: #a855f7;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-reset:hover {
+    background: rgba(168, 85, 247, 0.2);
+    border-color: rgba(168, 85, 247, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-reset svg {
+    flex-shrink: 0;
+}
+
+.staking-summary {
+    margin-top: 20px;
+}
+
+.staking-breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.staking-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 2px solid;
+}
+
+.capital-item {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(147, 197, 253, 0.08) 100%);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.capital-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+.rewards-item {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(216, 180, 254, 0.08) 100%);
+    border-color: rgba(168, 85, 247, 0.3);
+}
+
+.rewards-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(168, 85, 247, 0.15);
+    border-color: rgba(168, 85, 247, 0.5);
+}
+
+.staking-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #16213e;
+    font-size: 0.95em;
+}
+
+.label-icon {
+    font-size: 1.3em;
+}
+
+.label-text {
+    font-weight: 600;
+}
+
+.staking-value {
+    font-size: 1.8em;
+    font-weight: 800;
+}
+
+.capital-value {
+    color: #3b82f6;
+}
+
+.rewards-value {
+    color: #a855f7;
+}
+
+.staking-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.12) 0%, rgba(16, 185, 129, 0.12) 100%);
+    border-radius: 14px;
+    border: 3px solid rgba(52, 211, 153, 0.4);
+    transition: all 0.3s ease;
+}
+
+.staking-total:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(52, 211, 153, 0.2);
+    border-color: rgba(52, 211, 153, 0.6);
+}
+
+.total-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: #16213e;
+    font-size: 1.1em;
+}
+
+.total-value {
+    font-size: 2.2em;
+    font-weight: 900;
+    color: #10b981;
+}
+
 /* Formularios */
 .form-group {
     margin-bottom: 25px;
@@ -719,6 +867,40 @@ footer #network-name {
 
     .delegator-amount {
         font-size: 0.95em;
+    }
+
+    .staking-breakdown {
+        grid-template-columns: 1fr;
+    }
+
+    .staking-item {
+        padding: 15px;
+    }
+
+    .staking-value {
+        font-size: 1.5em;
+    }
+
+    .staking-total {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .total-value {
+        font-size: 1.8em;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .btn-reset {
+        font-size: 0.8em;
+        padding: 6px 12px;
     }
 }
 
